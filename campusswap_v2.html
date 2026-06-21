@@ -1,0 +1,560 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--color-background-tertiary);color:var(--color-text-primary)}
+.app{min-height:100vh}
+nav{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:500}
+.nav-logo span{font-size:13px;font-weight:400;color:var(--color-text-secondary);background:var(--color-background-secondary);padding:2px 8px;border-radius:var(--border-radius-md)}
+.nav-tabs{display:flex;gap:4px}
+.tab-btn{padding:6px 14px;border:none;background:none;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;color:var(--color-text-secondary);display:flex;align-items:center;gap:6px;transition:all .15s}
+.tab-btn:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.tab-btn.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.hero{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:2.5rem 1.5rem 2rem}
+.hero-inner{max-width:720px;margin:0 auto;text-align:center}
+.hero h1{font-size:26px;font-weight:500;margin-bottom:8px}
+.hero p{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.search-bar{display:flex;gap:8px;max-width:480px;margin:0 auto}
+.search-bar input{flex:1;padding:10px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:14px;color:var(--color-text-primary)}
+.search-bar input:focus{outline:none;border-color:var(--color-border-primary)}
+.btn-primary{padding:10px 16px;background:#185FA5;color:#fff;border:none;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;font-weight:500;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:opacity .15s}
+.btn-primary:hover{opacity:.88}
+.stats-bar{background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary);padding:.75rem 1.5rem;display:flex;gap:1.5rem;flex-wrap:wrap}
+.stat-pill{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary)}
+.stat-pill strong{color:var(--color-text-primary);font-weight:500}
+.main{max-width:1080px;margin:0 auto;padding:1.5rem}
+.layout{display:grid;grid-template-columns:220px 1fr;gap:1.5rem}
+.sidebar{display:flex;flex-direction:column;gap:1rem}
+.filter-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem}
+.filter-card h3{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.75rem}
+.filter-opts{display:flex;flex-direction:column;gap:4px}
+.filter-opt{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;color:var(--color-text-secondary);transition:all .15s;border:none;background:none;width:100%;text-align:left}
+.filter-opt:hover{background:var(--color-background-secondary);color:var(--color-text-primary)}
+.filter-opt.active{background:#E6F1FB;color:#185FA5;font-weight:500}
+.filter-opt .badge{margin-left:auto;font-size:11px;background:var(--color-background-secondary);padding:1px 6px;border-radius:99px;color:var(--color-text-secondary)}
+.filter-opt.active .badge{background:#B5D4F4;color:#0C447C}
+.content-area{display:flex;flex-direction:column;gap:1rem}
+.toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.result-count{font-size:13px;color:var(--color-text-secondary)}
+.result-count strong{color:var(--color-text-primary)}
+.sort-select{padding:6px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);font-size:13px;color:var(--color-text-primary);cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;display:flex;flex-direction:column;gap:.6rem;transition:border-color .15s}
+.card:hover{border-color:var(--color-border-primary)}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-tipo{font-size:11px;font-weight:500;padding:3px 8px;border-radius:99px}
+.tipo-venta{background:#EAF3DE;color:#3B6D11}
+.tipo-alquiler{background:#FAEEDA;color:#854F0B}
+.tipo-intercambio{background:#E1F5EE;color:#0F6E56}
+.tipo-donacion{background:#FBEAF0;color:#993556}
+.card-disp{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.disp-si{background:#639922}
+.disp-no{background:#E24B4A}
+.card-title{font-size:14px;font-weight:500;line-height:1.4}
+.card-cat{font-size:12px;color:var(--color-text-secondary);display:flex;align-items:center;gap:4px}
+.card-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{display:flex;align-items:center;justify-content:space-between;border-top:0.5px solid var(--color-border-tertiary);padding-top:.6rem}
+.card-precio{font-size:16px;font-weight:500}
+.precio-gratuito{font-size:13px;color:#3B6D11;font-weight:500}
+.card-meta{font-size:11px;color:var(--color-text-secondary);text-align:right}
+.btn-contactar{width:100%;margin-top:.3rem;padding:9px 0;background:#0C444C;color:#9FE1CB;border:0.5px solid #085041;border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
+.btn-contactar:hover{background:#085041}
+.btn-contactar:disabled{background:var(--color-background-secondary);color:var(--color-text-secondary);border-color:var(--color-border-tertiary);cursor:not-allowed}
+.empty-state{text-align:center;padding:3rem;color:var(--color-text-secondary)}
+.empty-state i{font-size:48px;display:block;margin-bottom:1rem;color:var(--color-border-primary)}
+.page-stats{display:flex;flex-direction:column;gap:1.5rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem}
+.stat-card .s-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.stat-card .s-val{font-size:24px;font-weight:500}
+.chart-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem}
+.chart-card h3{font-size:14px;font-weight:500;margin-bottom:1rem}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bar-label{font-size:12px;color:var(--color-text-secondary);width:120px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;height:20px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);overflow:hidden}
+.bar-fill{height:100%;border-radius:var(--border-radius-md);display:flex;align-items:center;padding-left:8px;font-size:11px;color:#fff;font-weight:500;transition:width .5s ease}
+.bar-c0{background:#185FA5}.bar-c1{background:#639922}.bar-c2{background:#854F0B}.bar-c3{background:#0F6E56}.bar-c4{background:#993556}.bar-c5{background:#533AB7}
+.op-row{display:flex;gap:12px;flex-wrap:wrap}
+.op-pill{display:flex;align-items:center;gap:8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem;flex:1;min-width:140px}
+.op-pill .op-name{font-size:12px;color:var(--color-text-secondary)}
+.op-pill .op-num{font-size:18px;font-weight:500}
+.page-form{max-width:640px;margin:0 auto}
+.form-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem}
+.form-card h2{font-size:16px;font-weight:500;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:12px;font-weight:500;color:var(--color-text-secondary)}
+.form-group input,.form-group select,.form-group textarea{padding:8px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:13px;color:var(--color-text-primary);font-family:inherit}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#185FA5}
+.form-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:1rem;padding-top:1rem;border-top:0.5px solid var(--color-border-tertiary)}
+.btn-sec{padding:8px 16px;background:none;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;font-size:13px;color:var(--color-text-secondary);transition:all .15s}
+.btn-sec:hover{background:var(--color-background-secondary)}
+.success-msg{background:#EAF3DE;border:0.5px solid #97C459;border-radius:var(--border-radius-md);padding:.75rem 1rem;font-size:13px;color:#3B6D11;display:none;align-items:center;gap:8px;margin-bottom:1rem}
+.success-msg.show{display:flex}
+.tag-carrera{font-size:11px;background:var(--color-background-secondary);color:var(--color-text-secondary);padding:2px 7px;border-radius:99px}
+
+/* ── Modal overlay ── */
+.modal-overlay{display:none;position:absolute;inset:0;background:rgba(10,15,25,.55);z-index:200;align-items:center;justify-content:center;min-height:100%}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);width:100%;max-width:400px;overflow:hidden}
+.modal-header{background:#0C444C;padding:1.1rem 1.25rem;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.modal-header-title{font-size:15px;font-weight:500;color:#9FE1CB}
+.modal-header-sub{font-size:12px;color:#5DCAA5;margin-top:2px}
+.modal-close{background:none;border:none;cursor:pointer;color:#5DCAA5;font-size:18px;padding:0;line-height:1;flex-shrink:0;margin-top:1px}
+.modal-close:hover{color:#9FE1CB}
+.modal-body{padding:1.25rem}
+.modal-avatar{width:44px;height:44px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:15px;color:#0C447C;flex-shrink:0}
+.modal-vendor-row{display:flex;align-items:center;gap:12px;margin-bottom:1rem}
+.modal-vendor-name{font-size:14px;font-weight:500}
+.modal-vendor-label{font-size:12px;color:var(--color-text-secondary)}
+.modal-msg{font-size:13px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:1.1rem;padding:.75rem;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border-left:3px solid #185FA5}
+.modal-phone-row{display:flex;align-items:center;justify-content:space-between;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.7rem 1rem;margin-bottom:1rem}
+.modal-phone-label{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.modal-phone-num{font-size:15px;font-weight:500;letter-spacing:.04em}
+.modal-copy{background:none;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:4px 10px;font-size:12px;color:var(--color-text-secondary);cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .15s}
+.modal-copy:hover{background:var(--color-background-primary);color:var(--color-text-primary)}
+.modal-copy.copied{color:#3B6D11;border-color:#97C459}
+.btn-whatsapp{width:100%;padding:11px;background:#1A7440;color:#fff;border:none;border-radius:var(--border-radius-md);cursor:pointer;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;margin-bottom:.5rem}
+.btn-whatsapp:hover{opacity:.88}
+.modal-footer-note{text-align:center;font-size:11px;color:var(--color-text-secondary)}
+.modal-separator{height:0.5px;background:var(--color-border-tertiary);margin:.9rem 0}
+.modal-item-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-text-secondary)}
+.modal-item-row strong{color:var(--color-text-primary);font-size:13px}
+</style>
+
+<div class="app" id="app">
+<nav>
+  <div class="nav-logo">
+    <i class="ti ti-arrows-exchange" aria-hidden="true" style="font-size:20px;color:#185FA5"></i>
+    CampusSwap
+    <span>Beta</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('home')" id="tab-home"><i class="ti ti-home" aria-hidden="true"></i> Inicio</button>
+    <button class="tab-btn" onclick="showPage('catalogo')" id="tab-catalogo"><i class="ti ti-layout-grid" aria-hidden="true"></i> Catálogo</button>
+    <button class="tab-btn" onclick="showPage('estadisticas')" id="tab-estadisticas"><i class="ti ti-chart-bar" aria-hidden="true"></i> Estadísticas</button>
+    <button class="tab-btn" onclick="showPage('agregar')" id="tab-agregar"><i class="ti ti-plus" aria-hidden="true"></i> Publicar</button>
+  </div>
+</nav>
+
+<div id="page-content"></div>
+
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-header-title" id="modal-title">Coordiná el intercambio</div>
+        <div class="modal-header-sub" id="modal-sub">UTN Campus</div>
+      </div>
+      <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-vendor-row">
+        <div class="modal-avatar" id="modal-avatar">LF</div>
+        <div>
+          <div class="modal-vendor-name" id="modal-vendor-name">Lucía Fernández</div>
+          <div class="modal-vendor-label">Vendedor/a en CampusSwap</div>
+        </div>
+      </div>
+      <div class="modal-msg" id="modal-msg">Comunicate con el vendedor para pactar el punto de encuentro en la UTN y concretar la transacción.</div>
+      <div class="modal-item-row" style="margin-bottom:.75rem">
+        <i class="ti ti-tag" aria-hidden="true" style="font-size:14px"></i>
+        <span>Artículo: <strong id="modal-item-titulo">—</strong></span>
+      </div>
+      <div class="modal-item-row" style="margin-bottom:.9rem">
+        <i class="ti ti-arrows-exchange" aria-hidden="true" style="font-size:14px"></i>
+        <span>Modalidad: <strong id="modal-item-tipo">—</strong></span>
+      </div>
+      <div class="modal-separator"></div>
+      <div class="modal-phone-row">
+        <div>
+          <div class="modal-phone-label"><i class="ti ti-device-mobile" aria-hidden="true" style="font-size:11px"></i> Celular</div>
+          <div class="modal-phone-num" id="modal-phone">3624 123 456</div>
+        </div>
+        <button class="modal-copy" id="copy-btn" onclick="copiarTelefono()">
+          <i class="ti ti-copy" aria-hidden="true" style="font-size:13px"></i> Copiar
+        </button>
+      </div>
+      <button class="btn-whatsapp" id="modal-wa-btn" onclick="simularWhatsapp()">
+        <i class="ti ti-brand-whatsapp" aria-hidden="true" style="font-size:18px"></i>
+        Enviar mensaje por WhatsApp
+      </button>
+      <div class="modal-footer-note"><i class="ti ti-shield-check" aria-hidden="true" style="font-size:11px"></i> Acordá el intercambio siempre en espacios del campus</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const CATEGORIAS=["Libros","Apuntes","Calculadoras","Electrónica","Laboratorio","Software","Tutorías","Otros"];
+const TIPOS=["Venta","Alquiler","Intercambio","Donación"];
+const CARRERAS=["Ingeniería en Sistemas","Ingeniería Electrónica","Ingeniería Civil","Bioquímica","Física","Matemática","Arquitectura","Todas"];
+
+let publicaciones=[
+  {codigoPublicacion:"CS-001",titulo:"Cálculo Integral – Stewart 8va Ed.",categoria:"Libros",descripcion:"Libro en excelente estado, con marcadores en los capítulos más importantes. Ideal para primer año.",precio:4500,tipoOperacion:"Venta",carrera:"Ingeniería en Sistemas",disponible:true,nombreVendedor:"Lucía Fernández",telefonoVendedor:"3624198341"},
+  {codigoPublicacion:"CS-002",titulo:"Apuntes Álgebra Lineal completos",categoria:"Apuntes",descripcion:"Resúmenes de toda la cursada, incluye teoremas y ejercicios resueltos. PDF + papel.",precio:0,tipoOperacion:"Donación",carrera:"Matemática",disponible:true,nombreVendedor:"Tomás Ruiz",telefonoVendedor:"3624075512"},
+  {codigoPublicacion:"CS-003",titulo:"Calculadora TI-84 Plus",categoria:"Calculadoras",descripcion:"Calculadora graficadora casi sin uso. Incluye funda y pilas nuevas.",precio:18000,tipoOperacion:"Venta",carrera:"Todas",disponible:true,nombreVendedor:"María González",telefonoVendedor:"3624334780"},
+  {codigoPublicacion:"CS-004",titulo:"Kit Arduino Uno Starter",categoria:"Electrónica",descripcion:"Kit completo con protoboard, LEDs, resistencias, sensores y cables. Perfecto para proyectos.",precio:2500,tipoOperacion:"Alquiler",carrera:"Ingeniería Electrónica",disponible:true,nombreVendedor:"Santiago López",telefonoVendedor:"3624451293"},
+  {codigoPublicacion:"CS-005",titulo:"Termodinámica – Çengel & Boles",categoria:"Libros",descripcion:"5ta edición, español. Algunas páginas subrayadas con lápiz.",precio:6000,tipoOperacion:"Venta",carrera:"Ingeniería Civil",disponible:false,nombreVendedor:"Valentina Torres",telefonoVendedor:"3624562007"},
+  {codigoPublicacion:"CS-006",titulo:"Licencia MATLAB Estudiante 1 año",categoria:"Software",descripcion:"Licencia estudiantil original. Solo puedo transferirla a una cuenta universitaria.",precio:3200,tipoOperacion:"Venta",carrera:"Ingeniería en Sistemas",disponible:true,nombreVendedor:"Agustín Díaz",telefonoVendedor:"3624687145"},
+  {codigoPublicacion:"CS-007",titulo:"Microscopio óptico portátil",categoria:"Laboratorio",descripcion:"40x–1000x, con luz LED. Ideal para bioquímica. Equipado con maletín de transporte.",precio:800,tipoOperacion:"Alquiler",carrera:"Bioquímica",disponible:true,nombreVendedor:"Camila Moreno",telefonoVendedor:"3624710634"},
+  {codigoPublicacion:"CS-008",titulo:"Tutorías Física II",categoria:"Tutorías",descripcion:"Ofrezco clases personales o grupales de Física Ondulatoria y Electromagnetismo. Aprobé con 9.",precio:1500,tipoOperacion:"Venta",carrera:"Física",disponible:true,nombreVendedor:"Rodrigo Pérez",telefonoVendedor:"3624823906"},
+  {codigoPublicacion:"CS-009",titulo:"Resistencias y capacitores surtidos",categoria:"Electrónica",descripcion:"Más de 200 componentes pasivos variados. Lote completo para prácticos de laboratorio.",precio:0,tipoOperacion:"Intercambio",carrera:"Ingeniería Electrónica",disponible:true,nombreVendedor:"Florencia Méndez",telefonoVendedor:"3624941277"},
+  {codigoPublicacion:"CS-010",titulo:"Apuntes Algoritmos y Estructuras",categoria:"Apuntes",descripcion:"Resumen completo de toda la cursada. Incluye pseudocódigo, árboles, grafos y sorting.",precio:500,tipoOperacion:"Venta",carrera:"Ingeniería en Sistemas",disponible:true,nombreVendedor:"Bruno Castro",telefonoVendedor:"3624058490"},
+  {codigoPublicacion:"CS-011",titulo:"Física Universitaria – Sears Zemansky",categoria:"Libros",descripcion:"Vol. 1 y 2. 14va edición en español. Perfecto estado de conservación.",precio:9000,tipoOperacion:"Venta",carrera:"Física",disponible:true,nombreVendedor:"Sofía Ramos",telefonoVendedor:"3624163852"},
+  {codigoPublicacion:"CS-012",titulo:"Osciloscopio USB DSO",categoria:"Laboratorio",descripcion:"Osciloscopio digital portátil con software incluido. 2 canales, 20 MHz.",precio:4000,tipoOperacion:"Alquiler",carrera:"Ingeniería Electrónica",disponible:false,nombreVendedor:"Emiliano Vega",telefonoVendedor:"3624279013"},
+];
+
+let filtroCategoria="Todas";
+let filtroTipo="Todas";
+let busqueda="";
+let heroBusqueda="";
+
+function initials(name){return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();}
+
+function showPage(p){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const t=document.getElementById('tab-'+p);if(t)t.classList.add('active');
+  const c=document.getElementById('page-content');
+  if(p==='home') c.innerHTML=renderHome();
+  else if(p==='catalogo') c.innerHTML=renderCatalogo();
+  else if(p==='estadisticas') c.innerHTML=renderEstadisticas();
+  else if(p==='agregar') c.innerHTML=renderFormulario();
+}
+
+function getIconCat(cat){
+  const m={Libros:'ti-book',Apuntes:'ti-file-text',Calculadoras:'ti-calculator','Electrónica':'ti-circuit-board',Laboratorio:'ti-flask',Software:'ti-device-laptop','Tutorías':'ti-school',Otros:'ti-box'};
+  return m[cat]||'ti-box';
+}
+
+function renderStatsBar(){
+  const total=publicaciones.length;
+  const disp=publicaciones.filter(p=>p.disponible).length;
+  const gratis=publicaciones.filter(p=>p.precio===0).length;
+  return `<div class="stats-bar">
+    <div class="stat-pill"><i class="ti ti-package" aria-hidden="true"></i><span>Total: <strong>${total}</strong></span></div>
+    <div class="stat-pill"><i class="ti ti-circle-check" aria-hidden="true" style="color:#639922"></i><span>Disponibles: <strong>${disp}</strong></span></div>
+    <div class="stat-pill"><i class="ti ti-heart" aria-hidden="true" style="color:#993556"></i><span>Gratuitas: <strong>${gratis}</strong></span></div>
+    <div class="stat-pill"><i class="ti ti-users" aria-hidden="true" style="color:#185FA5"></i><span>Vendedores: <strong>${[...new Set(publicaciones.map(p=>p.nombreVendedor))].length}</strong></span></div>
+  </div>`;
+}
+
+function renderCard(pub){
+  const tc={'Venta':'tipo-venta','Alquiler':'tipo-alquiler','Intercambio':'tipo-intercambio','Donación':'tipo-donacion'};
+  const precio=pub.precio===0
+    ?`<span class="precio-gratuito">Gratis / Canje</span>`
+    :`<span class="card-precio">$${pub.precio.toLocaleString('es-AR')}</span>`;
+  const tel=pub.telefonoVendedor||'';
+  const btnDisabled=!pub.disponible;
+  const btnLabel=pub.disponible?'Contactar vendedor':'No disponible';
+  const dataAttrs=`data-codigo="${pub.codigoPublicacion}" data-nombre="${pub.nombreVendedor}" data-tel="${tel}" data-titulo="${pub.titulo.replace(/"/g,'&quot;')}" data-tipo="${pub.tipoOperacion}"`;
+  return `<div class="card">
+    <div class="card-head">
+      <span class="card-tipo ${tc[pub.tipoOperacion]||''}">${pub.tipoOperacion}</span>
+      <div class="card-disp ${pub.disponible?'disp-si':'disp-no'}" title="${pub.disponible?'Disponible':'No disponible'}"></div>
+    </div>
+    <div class="card-title">${pub.titulo}</div>
+    <div class="card-cat"><i class="ti ${getIconCat(pub.categoria)}" aria-hidden="true" style="font-size:13px"></i>${pub.categoria} · <span class="tag-carrera">${pub.carrera}</span></div>
+    <div class="card-desc">${pub.descripcion}</div>
+    <div class="card-footer">
+      ${precio}
+      <div class="card-meta">${pub.nombreVendedor}<br><span style="font-size:10px;opacity:.7">${pub.codigoPublicacion}</span></div>
+    </div>
+    <button class="btn-contactar" ${btnDisabled?'disabled':''} ${dataAttrs} onclick="abrirModal(this)">
+      <i class="ti ti-message-circle" aria-hidden="true" style="font-size:15px"></i>${btnLabel}
+    </button>
+  </div>`;
+}
+
+function abrirModal(btn){
+  const nombre=btn.dataset.nombre||'';
+  const tel=btn.dataset.tel||'';
+  const titulo=btn.dataset.titulo||'';
+  const tipo=btn.dataset.tipo||'';
+  const telFmt=tel.length===10?`${tel.slice(0,4)} ${tel.slice(4,7)} ${tel.slice(7)}`:tel;
+
+  document.getElementById('modal-title').textContent='¡Coordiná el intercambio!';
+  document.getElementById('modal-sub').textContent='UTN – Campus universitario';
+  document.getElementById('modal-avatar').textContent=initials(nombre);
+  document.getElementById('modal-vendor-name').textContent=nombre;
+  document.getElementById('modal-msg').textContent=`Comunicate con ${nombre} para pactar el punto de encuentro en la UTN y concretar la transacción.`;
+  document.getElementById('modal-item-titulo').textContent=titulo;
+  document.getElementById('modal-item-tipo').textContent=tipo;
+  document.getElementById('modal-phone').textContent=telFmt;
+  const copyBtn=document.getElementById('copy-btn');
+  copyBtn.innerHTML='<i class="ti ti-copy" aria-hidden="true" style="font-size:13px"></i> Copiar';
+  copyBtn.classList.remove('copied');
+  const waBtn=document.getElementById('modal-wa-btn');
+  waBtn.dataset.tel=tel;
+  waBtn.dataset.nombre=nombre;
+  waBtn.dataset.titulo=titulo;
+  waBtn.innerHTML='<i class="ti ti-brand-whatsapp" aria-hidden="true" style="font-size:18px"></i> Enviar mensaje por WhatsApp';
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function cerrarModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('modal-overlay')) cerrarModal();
+}
+
+function copiarTelefono(){
+  const num=document.getElementById('modal-phone').textContent.replace(/\s/g,'');
+  if(navigator.clipboard){navigator.clipboard.writeText(num).catch(()=>{});}
+  const btn=document.getElementById('copy-btn');
+  btn.classList.add('copied');
+  btn.innerHTML='<i class="ti ti-check" aria-hidden="true" style="font-size:13px"></i> Copiado';
+  setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='<i class="ti ti-copy" aria-hidden="true" style="font-size:13px"></i> Copiar';},2000);
+}
+
+function simularWhatsapp(){
+  const btn=document.getElementById('modal-wa-btn');
+  const nombre=btn.dataset.nombre||'';
+  const titulo=btn.dataset.titulo||'';
+  btn.innerHTML='<i class="ti ti-circle-check" aria-hidden="true" style="font-size:18px"></i> Mensaje enviado (simulación)';
+  btn.style.background='#145c31';
+  setTimeout(()=>{
+    btn.innerHTML='<i class="ti ti-brand-whatsapp" aria-hidden="true" style="font-size:18px"></i> Enviar mensaje por WhatsApp';
+    btn.style.background='';
+  },2800);
+}
+
+function renderHome(){
+  const recientes=publicaciones.slice(-4).reverse();
+  return `${renderStatsBar()}
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>Intercambiá, comprá y vendé en el campus</h1>
+      <p>La plataforma colaborativa para que los estudiantes accedan a materiales académicos de forma económica y sustentable.</p>
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar apuntes, libros, componentes..." id="hero-search" oninput="heroBusqueda=this.value">
+        <button class="btn-primary" onclick="irCatalogo()"><i class="ti ti-search" aria-hidden="true"></i> Buscar</button>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:2rem">
+      ${CATEGORIAS.map(c=>`<button onclick="irCategoria('${c}')" style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.9rem .75rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:border-color .15s" onmouseover="this.style.borderColor='var(--color-border-primary)'" onmouseout="this.style.borderColor='var(--color-border-tertiary)'">
+        <i class="ti ${getIconCat(c)}" aria-hidden="true" style="font-size:22px;color:#185FA5"></i>
+        <span style="font-size:12px;font-weight:500">${c}</span>
+        <span style="font-size:11px;color:var(--color-text-secondary)">${publicaciones.filter(p=>p.categoria===c).length} items</span>
+      </button>`).join('')}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <h2 style="font-size:15px;font-weight:500">Publicaciones recientes</h2>
+      <button class="tab-btn" onclick="showPage('catalogo')">Ver todo <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+    </div>
+    <div class="grid">${recientes.map(renderCard).join('')}</div>
+  </div>`;
+}
+
+function irCatalogo(){busqueda=heroBusqueda;filtroCategoria="Todas";filtroTipo="Todas";showPage('catalogo');}
+function irCategoria(c){filtroCategoria=c;busqueda="";filtroTipo="Todas";showPage('catalogo');}
+
+function renderCatalogo(){
+  const catCounts={};
+  CATEGORIAS.forEach(c=>catCounts[c]=publicaciones.filter(p=>p.categoria===c).length);
+  catCounts['Todas']=publicaciones.length;
+
+  let filtradas=publicaciones.filter(p=>{
+    const matchCat=filtroCategoria==="Todas"||p.categoria===filtroCategoria;
+    const matchTipo=filtroTipo==="Todas"||p.tipoOperacion===filtroTipo;
+    const matchBus=busqueda===""||p.titulo.toLowerCase().includes(busqueda.toLowerCase())||p.descripcion.toLowerCase().includes(busqueda.toLowerCase());
+    return matchCat&&matchTipo&&matchBus;
+  });
+
+  const opIcons={'Venta':'ti-shopping-cart','Alquiler':'ti-repeat','Intercambio':'ti-arrows-exchange','Donación':'ti-heart'};
+
+  return `${renderStatsBar()}
+  <div class="main">
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="filter-card">
+          <h3>Búsqueda</h3>
+          <input type="text" placeholder="Título o descripción..." value="${busqueda}" oninput="busqueda=this.value;renderCatalogoInPlace()" style="width:100%;padding:8px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);font-size:13px;color:var(--color-text-primary)">
+        </div>
+        <div class="filter-card">
+          <h3>Categoría</h3>
+          <div class="filter-opts">
+            <button class="filter-opt ${filtroCategoria==='Todas'?'active':''}" onclick="setCategoria('Todas')">
+              <i class="ti ti-layout-grid" aria-hidden="true" style="font-size:14px"></i> Todas
+              <span class="badge">${catCounts['Todas']}</span>
+            </button>
+            ${CATEGORIAS.map(c=>`<button class="filter-opt ${filtroCategoria===c?'active':''}" onclick="setCategoria('${c}')">
+              <i class="ti ${getIconCat(c)}" aria-hidden="true" style="font-size:14px"></i> ${c}
+              <span class="badge">${catCounts[c]||0}</span>
+            </button>`).join('')}
+          </div>
+        </div>
+        <div class="filter-card">
+          <h3>Tipo de operación</h3>
+          <div class="filter-opts">
+            ${['Todas',...TIPOS].map(t=>`<button class="filter-opt ${filtroTipo===t?'active':''}" onclick="setTipo('${t}')">
+              <i class="ti ${opIcons[t]||'ti-list'}" aria-hidden="true" style="font-size:14px"></i> ${t}
+            </button>`).join('')}
+          </div>
+        </div>
+      </aside>
+      <div class="content-area">
+        <div class="toolbar">
+          <span class="result-count"><strong>${filtradas.length}</strong> publicaciones encontradas${filtroCategoria!=='Todas'?` en <strong>${filtroCategoria}</strong>`:''}${busqueda?` para "<strong>${busqueda}</strong>"`:''}
+          </span>
+          <select class="sort-select" onchange="sortear(this.value)">
+            <option value="reciente">Más recientes</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+            <option value="nombre">Nombre A-Z</option>
+          </select>
+        </div>
+        <div id="cards-grid">
+          ${filtradas.length>0
+            ?`<div class="grid">${filtradas.map(renderCard).join('')}</div>`
+            :`<div class="empty-state"><i class="ti ti-mood-empty" aria-hidden="true"></i><p style="font-size:15px;font-weight:500;margin-bottom:4px">Sin resultados</p><p style="font-size:13px">Probá con otro término o categoría.</p></div>`
+          }
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderCatalogoInPlace(){
+  let filtradas=publicaciones.filter(p=>{
+    const matchCat=filtroCategoria==="Todas"||p.categoria===filtroCategoria;
+    const matchTipo=filtroTipo==="Todas"||p.tipoOperacion===filtroTipo;
+    const matchBus=busqueda===""||p.titulo.toLowerCase().includes(busqueda.toLowerCase())||p.descripcion.toLowerCase().includes(busqueda.toLowerCase());
+    return matchCat&&matchTipo&&matchBus;
+  });
+  const grid=document.getElementById('cards-grid');
+  if(!grid) return;
+  grid.innerHTML=filtradas.length>0
+    ?`<div class="grid">${filtradas.map(renderCard).join('')}</div>`
+    :`<div class="empty-state"><i class="ti ti-mood-empty" aria-hidden="true"></i><p style="font-size:15px;font-weight:500;margin-bottom:4px">Sin resultados</p><p style="font-size:13px">Probá con otro término o categoría.</p></div>`;
+}
+
+function setCategoria(c){filtroCategoria=c;showPage('catalogo');}
+function setTipo(t){filtroTipo=t;showPage('catalogo');}
+function sortear(v){
+  if(v==='precio-asc') publicaciones.sort((a,b)=>a.precio-b.precio);
+  else if(v==='precio-desc') publicaciones.sort((a,b)=>b.precio-a.precio);
+  else if(v==='nombre') publicaciones.sort((a,b)=>a.titulo.localeCompare(b.titulo));
+  renderCatalogoInPlace();
+}
+
+function renderEstadisticas(){
+  const total=publicaciones.length;
+  const disp=publicaciones.filter(p=>p.disponible).length;
+  const gratis=publicaciones.filter(p=>p.precio===0).length;
+  const conPrecio=publicaciones.filter(p=>p.precio>0);
+  const promedio=conPrecio.length>0?Math.round(conPrecio.reduce((a,b)=>a+b.precio,0)/conPrecio.length):0;
+  const catStats=CATEGORIAS.map(c=>({cat:c,count:publicaciones.filter(p=>p.categoria===c).length})).sort((a,b)=>b.count-a.count);
+  const maxCat=Math.max(...catStats.map(c=>c.count));
+  const opStats=TIPOS.map(t=>({tipo:t,count:publicaciones.filter(p=>p.tipoOperacion===t).length}));
+  const opIcons={'Venta':'ti-shopping-cart','Alquiler':'ti-repeat','Intercambio':'ti-arrows-exchange','Donación':'ti-heart'};
+  const opColors={'Venta':'#185FA5','Alquiler':'#854F0B','Intercambio':'#0F6E56','Donación':'#993556'};
+  const carreras=[...new Set(publicaciones.map(p=>p.carrera))];
+  const carreraStats=carreras.map(c=>({c,n:publicaciones.filter(p=>p.carrera===c).length})).sort((a,b)=>b.n-a.n);
+  const maxCar=Math.max(...carreraStats.map(c=>c.n));
+  return `<div class="main">
+    <div class="page-stats">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="s-label">Total publicaciones</div><div class="s-val">${total}</div></div>
+        <div class="stat-card"><div class="s-label">Disponibles</div><div class="s-val" style="color:#639922">${disp}</div></div>
+        <div class="stat-card"><div class="s-label">Gratuitas / Canje</div><div class="s-val" style="color:#993556">${gratis}</div></div>
+        <div class="stat-card"><div class="s-label">Precio promedio</div><div class="s-val">$${promedio.toLocaleString('es-AR')}</div></div>
+        <div class="stat-card"><div class="s-label">Vendedores únicos</div><div class="s-val">${[...new Set(publicaciones.map(p=>p.nombreVendedor))].length}</div></div>
+        <div class="stat-card"><div class="s-label">Carreras activas</div><div class="s-val">${[...new Set(publicaciones.map(p=>p.carrera).filter(c=>c!=='Todas'))].length}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="chart-card" style="grid-column:1/-1">
+          <h3>Tipos de operación</h3>
+          <div class="op-row">
+            ${opStats.map(o=>`<div class="op-pill">
+              <i class="ti ${opIcons[o.tipo]}" aria-hidden="true" style="font-size:22px;color:${opColors[o.tipo]}"></i>
+              <div><div class="op-name">${o.tipo}</div><div class="op-num">${o.count}</div></div>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>Por categoría</h3>
+          ${catStats.map((c,i)=>c.count>0?`<div class="bar-row">
+            <span class="bar-label">${c.cat}</span>
+            <div class="bar-track"><div class="bar-fill bar-c${i%6}" style="width:${Math.round(c.count/maxCat*100)}%">${c.count}</div></div>
+          </div>`:'').join('')}
+        </div>
+        <div class="chart-card">
+          <h3>Por carrera</h3>
+          ${carreraStats.filter(c=>c.c!=='Todas').map((c,i)=>`<div class="bar-row">
+            <span class="bar-label" style="font-size:11px">${c.c.replace('Ingeniería ','Ing. ')}</span>
+            <div class="bar-track"><div class="bar-fill bar-c${i%6}" style="width:${Math.round(c.n/maxCar*100)}%">${c.n}</div></div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderFormulario(){
+  return `<div class="main">
+    <div class="page-form">
+      <div class="success-msg" id="success-msg"><i class="ti ti-circle-check" aria-hidden="true"></i> Publicación agregada exitosamente.</div>
+      <div class="form-card">
+        <h2><i class="ti ti-plus" aria-hidden="true" style="color:#185FA5"></i> Nueva publicación</h2>
+        <div class="form-grid">
+          <div class="form-group"><label>Título *</label><input type="text" id="f-titulo" placeholder="Ej: Cálculo Integral – Stewart"></div>
+          <div class="form-group"><label>Categoría *</label><select id="f-categoria">${CATEGORIAS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+          <div class="form-group"><label>Tipo de operación *</label><select id="f-tipo">${TIPOS.map(t=>`<option>${t}</option>`).join('')}</select></div>
+          <div class="form-group"><label>Precio ($ARS) — 0 si es gratis</label><input type="number" id="f-precio" value="0" min="0"></div>
+          <div class="form-group"><label>Carrera relacionada</label><select id="f-carrera">${CARRERAS.map(c=>`<option>${c}</option>`).join('')}</select></div>
+          <div class="form-group"><label>Tu nombre *</label><input type="text" id="f-vendedor" placeholder="Nombre completo"></div>
+          <div class="form-group"><label>Teléfono celular *</label><input type="tel" id="f-telefono" placeholder="Ej: 3624123456" maxlength="10"></div>
+          <div class="form-group full"><label>Descripción *</label><textarea id="f-desc" placeholder="Describí el estado, condición, qué incluye..."></textarea></div>
+          <div class="form-group" style="flex-direction:row;align-items:center;gap:10px">
+            <input type="checkbox" id="f-disp" checked style="width:16px;height:16px;cursor:pointer">
+            <label for="f-disp" style="cursor:pointer;font-size:13px">Disponible inmediatamente</label>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-sec" onclick="limpiarForm()">Limpiar</button>
+          <button class="btn-primary" onclick="agregarPublicacion()"><i class="ti ti-send" aria-hidden="true"></i> Publicar</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function limpiarForm(){
+  ['f-titulo','f-desc','f-vendedor','f-telefono'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const p=document.getElementById('f-precio');if(p)p.value=0;
+  const d=document.getElementById('f-disp');if(d)d.checked=true;
+}
+
+function agregarPublicacion(){
+  const titulo=(document.getElementById('f-titulo').value||'').trim();
+  const desc=(document.getElementById('f-desc').value||'').trim();
+  const vendedor=(document.getElementById('f-vendedor').value||'').trim();
+  const telefono=(document.getElementById('f-telefono').value||'').trim();
+  if(!titulo||!desc||!vendedor||!telefono){alert('Por favor completá todos los campos obligatorios incluyendo el teléfono.');return;}
+  const codigo='CS-'+String(publicaciones.length+1).padStart(3,'0');
+  publicaciones.push({
+    codigoPublicacion:codigo,titulo,
+    categoria:document.getElementById('f-categoria').value,
+    descripcion:desc,
+    precio:parseFloat(document.getElementById('f-precio').value)||0,
+    tipoOperacion:document.getElementById('f-tipo').value,
+    carrera:document.getElementById('f-carrera').value,
+    disponible:document.getElementById('f-disp').checked,
+    nombreVendedor:vendedor,
+    telefonoVendedor:telefono
+  });
+  showPage('agregar');
+  const msg=document.getElementById('success-msg');
+  if(msg){msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),4000);}
+}
+
+showPage('home');
+</script>
